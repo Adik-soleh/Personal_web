@@ -21,8 +21,7 @@ app.set("views", path.join(__dirname, "./html"));
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
-// Static files
-app.use(express.static("models")) 
+// Static files 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(express.urlencoded({ extended: true }));
 
