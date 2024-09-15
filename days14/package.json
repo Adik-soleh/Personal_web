@@ -1,0 +1,23 @@
+{
+  "name": "days11",
+  "version": "1.0.0",
+  "description": "days-11",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "soleh",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "hbs": "^4.2.0",
+    "pg": "^8.12.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.4",
+    "sequelize-cli": "^6.6.2"
+  },
+  "keywords": []
+}
