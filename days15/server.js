@@ -220,5 +220,3 @@ function contacMe(req, res) {
 app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
 });
-
-module.exports = app;
