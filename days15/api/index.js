@@ -2,11 +2,11 @@ const express = require('express');
 const app = express();
 const port = 3000;
 const path = require("path");
-const config = require("./config/config.json");
+const config = require("../config/config.json");
 const { Sequelize } = require("sequelize");
 const bcrypt = require('bcrypt');
-const model = require("./models").blogs;
-const userModel = require("./models").user;
+const model = require("../models").blogs;
+const userModel = require("../models").user;
 const flash = require("express-flash");
 const session = require('express-session');
 
@@ -15,7 +15,7 @@ const sequelize = new Sequelize(config.development);
 
 // Set view engine dan folder views
 app.set("view engine", "html");
-app.set("views", path.join(__dirname, "./html"));
+app.set("views", path.join(__dirname, "../html"));
 
 app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
