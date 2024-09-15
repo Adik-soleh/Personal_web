@@ -13,6 +13,7 @@ const Module = require('module');
 
 // Set up Sequelize
 const sequelize = new Sequelize(config.development);
+app.use(express.static("html")) 
 
 // Set view engine dan folder views
 app.set("view engine", "html");
