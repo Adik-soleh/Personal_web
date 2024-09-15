@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = 3002;
 const path = require("path");
 const config = require("./config/config.json");
 const { Sequelize } = require("sequelize");
@@ -13,13 +13,11 @@ const Module = require('module');
 
 // Set up Sequelize
 const sequelize = new Sequelize(config.development);
-app.use(express.static("htnl")) 
+app.use(express.static("html")) 
 
 // Set view engine dan folder views
 app.set("view engine", "html");
 app.set("views", path.join(__dirname, "./html"));
-
-app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
 // Static files 
