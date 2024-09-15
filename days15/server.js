@@ -9,6 +9,7 @@ const model = require("./models").blogs;
 const userModel = require("./models").user;
 const flash = require("express-flash");
 const session = require('express-session');
+const Module = require('module');
 
 // Set up Sequelize
 const sequelize = new Sequelize(config.development);
@@ -21,6 +22,7 @@ app.set('view engine', 'html');
 app.engine('html', require('hbs').__express);
 
 // Static files
+app.use(express.static("models")) 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(express.urlencoded({ extended: true }));
 
@@ -221,4 +223,4 @@ app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
 });
 
-module.exports = app
+module.exports = app;
