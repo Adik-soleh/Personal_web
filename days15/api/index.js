@@ -1,12 +1,12 @@
 const express = require('express');
 const app = express();
-const port = 3005;
+const port = 8000;
 const path = require("path");
-const config = require("../config/config.json");
+const config = require("./config/config.json");
 const { Sequelize } = require("sequelize");
 const bcrypt = require('bcrypt');
-const model = require("../models").blogs;
-const userModel = require("../models").user;
+const model = require("./models").blogs;
+const userModel = require("./models").user;
 const flash = require("express-flash");
 const session = require('express-session');
 const Module = require('module');
@@ -17,11 +17,11 @@ const sequelize = new Sequelize(config.development);
 
 // Set view engine dan folder views
 app.set("view engine", "html");
-app.set("views", path.join(__dirname, "../html"));
+app.set("views", path.join(__dirname, "./html"));
 app.engine('html', require('hbs').__express);
 
 // Static files 
-app.use("//assets", express.static(path.join(__dirname, "assets")));
+app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(express.urlencoded({ extended: true }));
 
 // Munculkan alert dengan flash saat user berhasil login
@@ -220,6 +220,5 @@ function contacMe(req, res) {
 app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
 });
-
 
 module.exports = app;
