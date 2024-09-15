@@ -5,18 +5,15 @@
   "main": "index.js",
   "engines": {
     "node": "20.x"
-},
-  
+  },
   "scripts": {
-    
-    
     "start": "node index.js"
   },
   "author": "soleh",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
-    "express": "^4.19.2",
+    "express": "^4.21.0",
     "express-flash": "^0.0.2",
     "express-session": "^1.18.0",
     "hbs": "^4.2.0",
