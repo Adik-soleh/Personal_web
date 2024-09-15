@@ -1,15 +1,14 @@
 const express = require('express');
 const app = express();
-const port = 8000;
+const port = 3002;
 const path = require("path");
-const config = require("./config/config.json");
+const config = require("../config/config.json");
 const { Sequelize } = require("sequelize");
 const bcrypt = require('bcrypt');
-const model = require("./models").blogs;
-const userModel = require("./models").user;
+const model = require("../models").blogs;
+const userModel = require("../models").user;
 const flash = require("express-flash");
 const session = require('express-session');
-const Module = require('module');
 
 // Set up Sequelize
 const sequelize = new Sequelize(config.development);
@@ -17,7 +16,7 @@ const sequelize = new Sequelize(config.development);
 
 // Set view engine dan folder views
 app.set("view engine", "html");
-app.set("views", path.join(__dirname, "./html"));
+app.set("views", path.join(__dirname, "../html"));
 app.engine('html', require('hbs').__express);
 
 // Static files 
@@ -220,5 +219,3 @@ function contacMe(req, res) {
 app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
 });
-
-module.exports = app;
