@@ -9,6 +9,7 @@ const userModel = require("./models").user;
 const flash = require("express-flash");
 const session = require('express-session');
 const Module = require('module');
+const port = 4000;
 
 // Set up Sequelize
 const sequelize = new Sequelize(config.development);
