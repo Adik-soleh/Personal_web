@@ -4,8 +4,8 @@
   "description": "days-15",
   "main": "index.js",
   "engines": {
-    "node": "20.x"
-  },
+    "node": "16.x"
+},
   
   "scripts": {
     

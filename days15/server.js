@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const port = 3002;
 const path = require("path");
 const config = require("./config/config.json");
 const { Sequelize } = require("sequelize");

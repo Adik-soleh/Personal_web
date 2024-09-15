@@ -1,6 +1,5 @@
 const express = require('express');
 const app = express();
-const port = 3002;
 const path = require("path");
 const config = require("../config/config.json");
 const { Sequelize } = require("sequelize");
@@ -213,9 +212,11 @@ function testi(req, res) {
 
 function contacMe(req, res) {
   res.render('contac');
+  
 }
 
 // Start server
-app.listen(port, () => {
-  console.log(`Server ready in port ${port}`);
-});
+
+  
+
+module.exports = app;
