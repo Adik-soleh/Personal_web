@@ -80,7 +80,7 @@ async function register(req, res) {
     });
 
     req.flash("valid", "Register berhasil");
-    res.redirect('/register');
+    res.redirect('/login');
   } catch (error) {
     req.flash("danger", "Register gagal");
     res.redirect('/register');
