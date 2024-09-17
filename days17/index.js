@@ -2,23 +2,21 @@ const express = require('express');
 const app = express();
 const path = require("path");
 const config = require("./config/config.json");
-const { Sequelize } = require("sequelize");
+const { Sequelize, QueryTypes } = require("sequelize");
+const sequelize = new Sequelize(config.development);
 const bcrypt = require('bcrypt');
 const model = require("./models").blogs;
 const userModel = require("./models").user;
 const flash = require("express-flash");
 const session = require('express-session');
-const Module = require('module');
-const port = 3000;
+const port = 3001;
 
 // Set up Sequelize
-const sequelize = new Sequelize(config.development);
  
 
 // Set view engine dan folder views
-app.set("view engine", "html");
-app.set("views", path.join(__dirname, "./html"));
-app.engine('html', require('hbs').__express);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "./views"));
 
 // Static files 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
@@ -42,7 +40,7 @@ app.use(session({
 app.get('/', home);
 app.get('/project', project);
 app.post('/project');
-app.post('/add-project', addProject);
+
 app.get('/delete-project/:id', deleteProject);
 app.get('/edit-project/:id', editProject);
 app.post('/edit-project/:id', edit);
@@ -124,9 +122,17 @@ function home(req, res) {
 }
 
 async function project(req, res) {
-  const result = await model.findAll();
+  // const result = await model.findAll({
+  //   include : userModel
+  // });
+  const query = 'SELECT public.blogs.*, public.users.name FROM public.blogs INNER JOIN public.users ON public.blogs."userId" = public.users.id';
+  const result = await sequelize.query(query,{type: QueryTypes.SELECT});
+
+  console.log("isi reesult" , result);
+  
   const user = req.session.user;
   res.render("project", { blog: result, user });
+ 
 }
 
 // CRUD
@@ -154,18 +160,62 @@ function createBlog(req, res) {
   res.render('add-project');
 }
 
+const multer = require('multer');
+
+
+
+// Set up multer storage configuration
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads'); // Store the images in 'uploads/' directory
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + path.extname(file.originalname)); // Create a unique file name
+    
+  }
+  
+});
+
+
+// Initialize multer
+const upload = multer({ storage: storage });
+
+// Function to add a project with an image
 async function addProject(req, res) {
-  const { title, content, image, Cbx1, Cbx2, Cbx3, Cbx4 } = req.body;
+  const { title, content } = req.body;
+  const image = req.file; // Get image data from multer
 
-  await model.create({
-    title,
-    content,
-    image: "https://cdn.pixabay.com/photo/2022/05/17/21/41/naruto-7203817_1280.jpg",
-    Cbx1: "https://static-00.iconduck.com/assets.00/java-icon-1511x2048-6ikx8301.png"
-  });
+  
+  if (!image) {
+    req.flash('danger', "Email / Password salah!");
+      return res.redirect('/add-project');
+  }
 
-  res.redirect("/project");
+  const imagePath = `/uploads/${image.filename}`; // Save the file path to the database
+
+  try {
+    // Save the project details and the image path to the database
+    await model.create({
+      title,
+      content,
+      Image: imagePath
+    });
+    console.log('isi gambar', imagePath);
+    
+    // Redirect after successfully adding the project
+    res.redirect('/project');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error adding project');
+  }
+  
 }
+
+// In your route file
+app.post('/add-project', upload.single('image'), addProject);
+
+
 
 async function edit(req, res) {
   const { id } = req.params;
@@ -183,6 +233,7 @@ async function edit(req, res) {
 
   res.redirect("/project");
 }
+
 
 async function editProject(req, res) {
   const { id } = req.params;
