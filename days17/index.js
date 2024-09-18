@@ -120,7 +120,10 @@ async function login(req, res) {
 
 function home(req, res) {
   const user = req.session.user;
-  res.render('index', { user });
+  if(!user) {
+    return res.redirect("/login")
+  }
+  res.render('index');
 }
 
 async function project(req, res) {

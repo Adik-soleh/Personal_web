@@ -58,6 +58,7 @@
       <a class="btn btn-warning" href="add-project">Create Blog</a>
     </div>
     {{/if}}
+    {{#if user}}
 {{#each blog}}
     <div class="container auto-" >
 <div class="card mb-3 d-grid gap-2 d-md-flex" style="max-width:90%">
@@ -89,6 +90,7 @@
   </div>
 </div>
 {{/each}}
+{{/if}}
 </section>
   <!-- card Project End -->
  
