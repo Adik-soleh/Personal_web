@@ -10,6 +10,7 @@ const userModel = require("./models").user;
 const flash = require("express-flash");
 const session = require('express-session');
 const port = 4000;
+const upload = require("./midelware/upload");
 
 // Set up Sequelize
  
@@ -21,6 +22,7 @@ app.set("views", path.join(__dirname, "./views"));
 // Static files 
 app.use("/assets", express.static(path.join(__dirname, "assets")));
 app.use(express.urlencoded({ extended: true }));
+app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
 // Munculkan alert dengan flash saat user berhasil login
 app.use(flash());
@@ -40,7 +42,7 @@ app.use(session({
 app.get('/', home);
 app.get('/project', project);
 app.post('/project');
-
+app.post('/add-project',upload.single("image"), addProject);
 app.get('/delete-project/:id', deleteProject);
 app.get('/edit-project/:id', editProject);
 app.post('/edit-project/:id', edit);
@@ -157,63 +159,29 @@ function addProject(req, res) {
 }
 
 function createBlog(req, res) {
+  const user = req.session.user
+  if(!user) {
+    return res.redirect("/login")
+  }
   res.render('add-project');
 }
 
-const multer = require('multer');
 
 
-
-// Set up multer storage configuration
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'uploads'); // Store the images in 'uploads/' directory
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, uniqueSuffix + path.extname(file.originalname)); // Create a unique file name
-    
-  }
-  
-});
-
-
-// Initialize multer
-const upload = multer({ storage: storage });
-
-// Function to add a project with an image
 async function addProject(req, res) {
   const { title, content } = req.body;
-  const image = req.file; // Get image data from multer
+  const imagePath = req.file.path;
+  const userId = req.session.user.id;
 
-  
-  if (!image) {
-    req.flash('danger', "Email / Password salah!");
-      return res.redirect('/add-project');
-  }
+  await model.create({
+    title : title,
+    content: content,
+    image : imagePath,
+    userId: userId
+  });
 
-  const imagePath = `/uploads/${image.filename}`; // Save the file path to the database
-
-  try {
-    // Save the project details and the image path to the database
-    await model.create({
-      title,
-      content,
-      Image: imagePath
-    });
-    console.log('isi gambar', imagePath);
-    
-    // Redirect after successfully adding the project
-    res.redirect('/project');
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error adding project');
-  }
-  
+  res.redirect("/project");
 }
-
-// In your route file
-app.post('/add-project', upload.single('image'), addProject);
 
 
 
