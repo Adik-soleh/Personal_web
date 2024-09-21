@@ -47,7 +47,7 @@ app.get('/delete-project/:id', deleteProject);
 app.get('/edit-project/:id', editProject);
 app.post('/edit-project/:id', edit);
 app.get('/testimonial', testi);
-app.get('/details/:id', detail);
+app.get('/details/:id', upload.single("image"),detail);
 app.get('/contac', contacMe);
 app.get('/add-project', createBlog);
 
@@ -118,12 +118,18 @@ async function login(req, res) {
   }
 }
 
+app.get('/logout',(req,res) => {
+  req.session.destroy();
+  res.redirect('/login');
+});
+
+
 function home(req, res) {
   const user = req.session.user;
   if(!user) {
     return res.redirect("/login")
   }
-  res.render('index');
+  res.render('index', { user });
 }
 
 async function project(req, res) {
@@ -145,13 +151,17 @@ async function deleteProject(req, res) {
   const { id } = req.params;
 
   let result = await model.findOne({
-    where: { id }
+    where: { 
+      id: id,
+     },
   });
 
   if (!result) return res.render("error");
 
   await model.destroy({
-    where: { id }
+    where: { 
+      id:id,
+     }
   });
 
   res.redirect("/project");
@@ -180,9 +190,12 @@ async function addProject(req, res) {
     title : title,
     content: content,
     image : imagePath,
-    userId: userId
+    userId: userId,
+
+    
   });
 
+  
   res.redirect("/project");
 }
 
@@ -193,7 +206,9 @@ async function edit(req, res) {
   const { title, content } = req.body;
 
   const blog = await model.findOne({
-    where: { id }
+    where: { 
+      id:id,
+     },
   });
 
   if (!blog) return res.render("error");
@@ -210,7 +225,9 @@ async function editProject(req, res) {
   const { id } = req.params;
 
   const result = await model.findOne({
-    where: { id }
+    where: { 
+      id: id,
+     },
   });
 
   if (!result) return res.render("error");
@@ -222,7 +239,9 @@ async function detail(req, res) {
   const { id } = req.params;
 
   const result = await model.findOne({
-    where: { id }
+    where: { 
+      id:id,
+     }
   });
 
   if (!result) return res.render("error");

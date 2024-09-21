@@ -20,7 +20,11 @@ module.exports = {
       },
       Image: {
         type: Sequelize.STRING,
-        allowNull: true // Pastikan allowNull disesuaikan dengan kebutuhan
+        allowNull: true 
+      },
+      cbx: {
+        type: Sequelize.STRING,
+        allowNull: true 
       },
       createdAt: {
         allowNull: false,
