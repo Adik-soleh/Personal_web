@@ -32,7 +32,7 @@ app.use(session({
   resave: false,
   saveUninitialized: true,
   cookie: {
-    maxAge: 172800000 
+    maxAge: 172800000
   }
 }));
 
@@ -55,7 +55,12 @@ app.post('/login', login);
 
 // Pegistrasi
 function registerVw(req, res) {
-  res.render('register');
+  const data = {
+    message: req.flash("message")
+  }
+  console.log(data);
+
+  res.render('register', data);
 }
 
 // User Registrasi
@@ -72,10 +77,10 @@ async function register(req, res) {
       password: hashPassword
     });
 
-    req.flash("valid", "Register berhasil");
+    req.flash("valid", ["register berhasil :)"]);
     res.redirect('/login');
   } catch (error) {
-    req.flash("danger", "Register gagal");
+    req.flash("danger", ["error", "error", "kolom tidak oleh kosong!"]);
     res.redirect('/register');
   }
 }
@@ -95,17 +100,16 @@ async function login(req, res) {
     });
 
     // Jika pengguna tidak ditemukan
-    if (!user) {
-      req.flash('danger', "Email / Password salah!");
+    if (!email) {
+      req.flash("danger", ["error", "error", "akun tidak di temukan!"]);
       return res.redirect('/login');
     }
-
     // Valiadsi password
     const validPassword = await bcrypt.compare(password, user.password);
 
     // Jika password tidak valid
     if (!validPassword) {
-      req.flash('danger', "Email / Password salah!");
+      req.flash("danger", ["error", "error", "password / email salah !"]);
       return res.redirect('/login');
     }
 
@@ -115,7 +119,7 @@ async function login(req, res) {
     res.redirect('/');
   } catch (error) {
     req.flash('danger', "Masalah saat login!");
-    res.redirect('/');
+    res.redirect('/login');
   }
 }
 
@@ -131,45 +135,6 @@ app.get('/logout', function (req, res, next) {
     });
   }
 });
-
-// Home Page
-function home(req, res) {
-  const user = req.session.user;
-  if (!user) {
-    return res.redirect("/login");
-  }
-  res.render('index', { user });
-}
-
-// Project page
-async function project(req, res) {
-  const query = 'SELECT public.blogs.*, public.users.name FROM public.blogs INNER JOIN public.users ON public.blogs."userId" = public.users.id';
-  const result = await sequelize.query(query, { type: QueryTypes.SELECT });
-
-  const user = req.session.user;
-  res.render("project", { blog: result, user });
-}
-
-// Delete project by id
-async function deleteProject(req, res) {
-  const { id } = req.params;
-
-  let result = await model.findOne({
-    where: {
-      id: id,
-    },
-  });
-
-  if (!result) return res.render("error");
-
-  await model.destroy({
-    where: {
-      id: id,
-    }
-  });
-
-  res.redirect("/project");
-}
 
 // Addproject page
 function addProject(req, res) {
@@ -244,6 +209,45 @@ async function addProject(req, res) {
     checkBox3: Cbx3,
     checkBox4: Cbx4,
     duration: Ldate(sDate, eDate)
+  });
+  res.redirect("/project");
+}
+
+
+// Home Page
+function home(req, res) {
+  const user = req.session.user;
+  if (!user) {
+    return res.redirect("/login");
+  }
+  res.render('index', { user });
+}
+
+// Project page
+async function project(req, res) {
+  const query = 'SELECT public.blogs.*, public.users.name FROM public.blogs INNER JOIN public.users ON public.blogs."userId" = public.users.id';
+  const result = await sequelize.query(query, { type: QueryTypes.SELECT });
+
+  const user = req.session.user;
+  res.render("project", { blog: result, user });
+}
+
+// Delete project by id
+async function deleteProject(req, res) {
+  const { id } = req.params;
+
+  let result = await model.findOne({
+    where: {
+      id: id,
+    },
+  });
+
+  if (!result) return res.render("error");
+  req.flash('danger', ["error", "error"])
+  await model.destroy({
+    where: {
+      id: id,
+    }
   });
   res.redirect("/project");
 }

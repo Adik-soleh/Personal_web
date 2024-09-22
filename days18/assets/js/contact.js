@@ -1,6 +1,6 @@
 
 // DOM SELECTION
-function sendData(event){
+function sendData(event) {
     event.preventDefault();
     const name = document.getElementById('formControlName');
     const email = document.getElementById('formControlEmail');
@@ -8,17 +8,17 @@ function sendData(event){
     const subject = document.getElementById('formControlSubject');
     const msg = document.getElementById('exampleFormControlTextarea1');
 
-    if(name.value === ''){
+    if (name.value === '') {
         name.setAttribute('required', true);
-    }else if(email.value === ''){
+    } else if (email.value === '') {
         email.setAttribute('required', true);
-    }else if(phone.value === ''){
+    } else if (phone.value === '') {
         phone.setAttribute('required', true);
-    }else if(subject.value === ''){
+    } else if (subject.value === '') {
         subject.setAttribute('required', true);
-    }else if(msg.value === ''){
+    } else if (msg.value === '') {
         msg.setAttribute('required', true);
-    }else{
+    } else {
         const mailTO = 'adiksoleh4@gmail.com';
 
         let a = document.createElement('a')
@@ -31,6 +31,6 @@ function sendData(event){
 const link = document.querySelectorAll('.bi-download');
 console.log(link);
 
-link[0].addEventListener('click', function(){
+link[0].addEventListener('click', function () {
     link.download = 'image/cv.png';
 });

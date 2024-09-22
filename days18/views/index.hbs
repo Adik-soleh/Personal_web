@@ -13,6 +13,7 @@
   <!-- style css modified -->
   <!-- <link rel="stylesheet" href="assets/css/card.css"> -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -50,6 +51,17 @@
   <!-- card blog -->
 
   <section class="text-white" style="max-width:100%; background-color:rgb(20, 24, 32) ">
+       {{#if messages.valid}}
+   <script>
+    Swal.fire({
+  position: "top-start",
+  icon: "success",
+  title: "{{messages.valid.[0]}}",
+  showConfirmButton: false,
+  timer: 1500
+});
+   </script>
+    {{/if}}
     <div class="container text-center p-2 contain-card">
       <div class="row">
         <div class="col pt-5">
