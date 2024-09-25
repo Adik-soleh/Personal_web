@@ -71,16 +71,20 @@ async function register(req, res) {
     const hashPassword = await bcrypt.hash(password, saltRounds);
 
     // Simpan ke database
-    await userModel.create({
-      name: name,
-      email: email,
-      password: hashPassword
-    });
-
-    req.flash("valid", ["register berhasil :)"]);
-    res.redirect('/login');
+    if (name && email && password) {
+      await userModel.create({
+        name: name,
+        email: email,
+        password: hashPassword
+      });
+      req.flash("valid", ["register berhasil :)"]);
+      res.redirect('/login');
+    }else{
+      req.flash("danger", ["error", "error", "kolom tidak oleh kosong!"]);
+    res.redirect('/register');
+    }
   } catch (error) {
-    req.flash("danger", ["error", "error", "kolom tidak oleh kosong!"]);
+    req.flash("danger", ["error", "error", "akun sudah ada"]);
     res.redirect('/register');
   }
 }
@@ -122,6 +126,7 @@ async function login(req, res) {
     res.redirect('/login');
   }
 }
+
 
 // Delete session
 app.get('/logout', function (req, res, next) {
@@ -215,12 +220,15 @@ async function addProject(req, res) {
 
 
 // Home Page
-function home(req, res) {
+async function home(req, res) {
+  const query = 'SELECT public.blogs.*, public.users.name FROM public.blogs INNER JOIN public.users ON public.blogs."userId" = public.users.id';
+  const result = await sequelize.query(query, { type: QueryTypes.SELECT });
+
   const user = req.session.user;
   if (!user) {
     return res.redirect("/login");
   }
-  res.render('index', { user });
+  res.render('index',{ blog: result, user });
 }
 
 // Project page
@@ -243,13 +251,16 @@ async function deleteProject(req, res) {
   });
 
   if (!result) return res.render("error");
-  req.flash('danger', ["error", "error"])
+  
   await model.destroy({
-    where: {
+  where: {
       id: id,
     }
   });
-  res.redirect("/project");
+
+req.flash("danger", ["error", "error", "kolom tidak oleh kosong!"]);
+res.redirect("/project");
+
 }
 
 // Edit page
@@ -330,3 +341,4 @@ app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
 });
 
+module.exports = app;
