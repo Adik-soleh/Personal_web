@@ -10,7 +10,6 @@ const userModel = require("./models").user;
 const upload = require("./midelware/upload");
 const session = require('express-session');
 const flash = require("express-flash");
-const port = 4000;
 
 
 // Mengatur view engine dan folder views
@@ -18,7 +17,7 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "./views"));
 
 // Static files
-app.use("/assets", express.static(path.join(__dirname, "assets")));
+app.use("/assets", express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use("/uploads", express.static(path.join(__dirname, "./uploads")));
 
@@ -336,6 +335,8 @@ function contacMe(req, res) {
   res.render('contac');
 }
 
+
+const port = process.env.PORT || 4000;
 
 app.listen(port, () => {
   console.log(`Server ready in port ${port}`);
