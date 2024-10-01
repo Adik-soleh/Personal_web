@@ -36,7 +36,7 @@ app.use(session({
   }
 }));
 
-// Definisi route aplikasi
+// route app
 app.get('/', home);
 app.get('/project', project);
 app.post('/project');
@@ -53,7 +53,7 @@ app.get('/login', loginVw);
 app.post('/register', register);
 app.post('/login', login);
 
-// Pegistrasi
+// Pegistrasi View
 function registerVw(req, res) {
   const data = {
     message: req.flash("message")
@@ -89,7 +89,7 @@ async function register(req, res) {
   }
 }
 
-// Login page
+// Login view
 function loginVw(req, res) {
   res.render('login');
 }
@@ -201,7 +201,7 @@ async function addProject(req, res) {
 
   const userId = req.session.user.id;
 
-  // send to Db
+  // simpan ke DB
   await model.create({
     title: title,
     content: content,
@@ -310,7 +310,7 @@ async function editProject(req, res) {
   res.render("edit-project", { blog: result });
 }
 
-// DEtail view
+// Detail view
 async function detail(req, res) {
   const { id } = req.params;
 
@@ -331,7 +331,7 @@ function testi(req, res) {
   res.render('testimonial');
 }
 
-// KOntak Page
+// Contac Page
 function contacMe(req, res) {
   res.render('contac');
 }

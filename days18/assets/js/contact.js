@@ -27,10 +27,8 @@ function sendData(event) {
     }
 }
 
-// download My CV
-const link = document.querySelectorAll('.bi-download');
-console.log(link);
-
-link[0].addEventListener('click', function () {
+// download resume
+const link = document.querySelector('.download');
+link.addEventListener('click', function(){
     link.download = 'image/cv.png';
 });
